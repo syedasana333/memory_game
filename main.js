@@ -464,7 +464,8 @@ function getContent(){
 } 
 
 function winner(winners, playersScore){
-    debugger;
+    
+    localStorage.clear();
 
     let bg = document.getElementById('bg');
     let banner = document.getElementById("banner");  
