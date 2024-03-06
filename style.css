@@ -1,0 +1,96 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: roboto;
+}
+
+body{
+    background-color: #172939;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container{
+   background-color: #fcfcfc;
+   padding: 32px;
+   border-radius: 12px;
+}
+
+h3{
+    color:#6a89a0;
+    font-size: .9rem;
+    font-weight: 600;
+    padding: 6px 0;
+}
+
+button{
+    cursor: pointer;
+    background-color: #9ab3c4;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 45px;
+    color: white;
+    padding: 9px 36px;
+}
+
+.set1,
+.set2,
+.set3{
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 12px;
+}
+
+.set2{
+    grid-template-columns:1fr 1fr 1fr 1fr;
+}
+
+.option1,
+.option2,
+.option3{
+    padding: 10px 0px;
+}
+
+.option1{
+    padding-top: 0;
+}
+
+#startBtn{
+    background-color: #FDA215;
+    width: 100%;
+    letter-spacing: .6px;
+    font-weight: 600;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.selected{
+    background-color: #30495B;
+}
+
+
+
+@media screen and (max-width: 480px){
+    .container{
+        width: 92%;
+        margin: 32px;
+        padding: 40px 24px;
+    }
+     
+    .set2{
+        width: 100%
+    }
+
+    h3{
+        margin-bottom: 6px;
+    }
+
+    button{
+        padding: 12px 0px;
+    }
+}
