@@ -18,6 +18,7 @@ let points = [];
 let playerIndex = 0;
 let newArray;
 let arrayTheme;
+let isFirstClick;
 
 
 function number(){
@@ -182,7 +183,7 @@ function singlePlayer(theme){
 
     noOfPlayers = document.querySelector("#noOfPlayers");
 
-    let isFirstClick = true;
+    isFirstClick = true;
   
     if(!time){
         time = document.createElement("div");
@@ -202,26 +203,30 @@ function singlePlayer(theme){
     displayMoves = document.querySelector("#moves");
   
     function startTimer() {
-      let minutes = 0;
-      let seconds = 0;
-  
-        intervalId = setInterval(() => {
-            seconds++;
-            if (seconds === 60) {
-            seconds = 0;
-            minutes++;
-            }
-            displayTime.textContent =
-            (minutes < 10 ? "0" : "") +
-            minutes +
-            ":" +
-            (seconds < 10 ? "0" : "") +
-            seconds;
-        }, 1000);
+        console.log('Timer started!');
+    
+        let minutes = 0;
+        let seconds = 0;
+    
+            intervalId = setInterval(() => {
+                seconds++;
+                if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+                }
+                displayTime.textContent =
+                (minutes < 10 ? "0" : "") +
+                minutes +
+                ":" +
+                (seconds < 10 ? "0" : "") +
+                seconds;
+            }, 1000);
     }
   
     document.querySelectorAll(".flipper").forEach((flipper) => {
         flipper.addEventListener("click", function () {
+            console.log('isFirstClick:', isFirstClick);
+
             if (isFirstClick) {
                 startTimer();
                 isFirstClick = false;
@@ -459,11 +464,12 @@ function getContent(){
 } 
 
 function winner(winners, playersScore){
-
-    localStorage.clear()
+    debugger;
 
     let bg = document.getElementById('bg');
     let banner = document.getElementById("banner");  
+
+    banner.innerHTML = '';
 
     bg.style.display = 'block';        
     banner.style.display = 'block'; 
