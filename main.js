@@ -17,6 +17,7 @@ let players = [];
 let points = [];
 let playerIndex = 0;
 let newArray;
+let arrayTheme;
 
 
 function number(){
@@ -144,6 +145,8 @@ function restartGame(){
 
     newArray = shuffleArray(newArray);
 
+    updateCardContent();
+
     let menu = document.querySelector('.menu-container');
     menu.style.display = 'none'
   
@@ -166,6 +169,18 @@ function shuffleArray(array) {
     }
 
     return array;
+}
+
+function updateCardContent() {
+    let cardBacks = document.querySelectorAll(".card-back");
+    newArray.forEach((value, index) => {
+        // Update the content of each card back with the new array order
+        if (arrayTheme === 'numbers') {
+            cardBacks[index].textContent = value;
+        } else if (arrayTheme === 'icons') {
+            cardBacks[index].querySelector("img").src = value;
+        }
+    });
 }
 
 function singlePlayer(theme){
@@ -399,7 +414,7 @@ function updateScoreUI(playerIndex) {
 }
 
 function getContent(){
-    let arrayTheme = localStorage.getItem('theme');
+    arrayTheme = localStorage.getItem('theme');
     let arrayPlayer = localStorage.getItem('player');
     let arraySize = localStorage.getItem('size');
     
