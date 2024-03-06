@@ -310,6 +310,10 @@ img{
   display: none;
 }
 
+.menu-btns,
+.closeBtn{
+  display: none;
+}
 
 @media screen and (max-width: 410px) {
   .btns{
@@ -323,11 +327,31 @@ img{
     background-color: white;
     z-index: 666;
     box-shadow: 2px 22px 112px hsla(205, 31%, 27%, 0.5);
-    /* position: relative; */
   }
 
   .menuBtn{
     display: block;
+  }
+
+  .closeBtn{
+    display: block;
+    position: absolute;
+    right: 22px;
+    bottom: 6px;
+    background: none;
+    padding: 22px;
+  }
+
+  .closeBtn img{
+    width: 45px;
+  }
+ 
+  #banner{
+    width: 90%
+  }
+
+  #banner #btns{
+    flex-direction: column;
   }
   
   .menu-btns{
@@ -338,7 +362,7 @@ img{
     border: 1px;
     gap: 20px;
     width: 80%;
-    padding: 50px 0px 120px;
+    padding: 40px 0px 110px;
   }
   
   .menu-btns button{
@@ -390,23 +414,4 @@ img{
     font-size: 2rem;
   }
 
-  .closeBtn{
-    position: absolute;
-    right: 22px;
-    bottom: 22px;
-    background: none;
-    padding: 22px;
-  }
-
-  .closeBtn img{
-    width: 45px;
-  }
- 
-  #banner{
-    width: 90%
-  }
-
-  #banner #btns{
-    flex-direction: column;
-  }
 }
