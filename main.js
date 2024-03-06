@@ -145,7 +145,9 @@ function restartGame(){
 
     newArray = shuffleArray(newArray);
 
-    updateCardContent();
+    setTimeout(() => {
+        updateCardContent();
+    }, 500);
 
     let menu = document.querySelector('.menu-container');
     menu.style.display = 'none'
@@ -160,16 +162,9 @@ function restartGame(){
 }
 
 function shuffleArray(array) {
-    let currentIndex = array.length, randomIndex;
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
+    return array.slice().sort(() => Math.random() - 0.5);
 }
+
 
 function updateCardContent() {
     let cardBacks = document.querySelectorAll(".card-back");
@@ -404,7 +399,6 @@ function multiplayer(num, theme){
     });
     
 }
-
 
 function updateScoreUI(playerIndex) {
     let scoreSpan = document.getElementById(`player${playerIndex}-score`);
