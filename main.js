@@ -18,8 +18,18 @@ let points = [];
 let playerIndex = 0;
 let newArray;
 let arrayTheme;
-let isFirstClick;
+let isFirstClick = true;
 
+// Audio objects
+const openSound = new Audio('./audio/card-open.mp3');
+const closeSound = new Audio('./audio/card-close.mp3');
+const gameOver = new Audio('./audio/game-complete.mp3');
+const rightMatch = new Audio('./audio/collect.mp3');
+
+function playAudio(audio) {
+    audio.currentTime = 0; // Reset playback position
+    audio.play(); // Play the audio
+}
 
 function number(){
     document.getElementById('icons').classList.remove('selected')
@@ -31,32 +41,23 @@ function icons(){
     document.getElementById('icons').classList.add('selected')
 }
 
-function numberOfPlayers(){  
-    player1.onclick = function(){
-        player2.classList.remove('selected')
-        player3.classList.remove('selected')
-        player4.classList.remove('selected')
-        player1.classList.add('selected')
-    }
-    player2.onclick = function(){
-        player1.classList.remove('selected')
-        player3.classList.remove('selected')
-        player4.classList.remove('selected')
-        player2.classList.add('selected')
-    }
-    player3.onclick = function(){
-        player1.classList.remove('selected')
-        player2.classList.remove('selected')
-        player4.classList.remove('selected')
-        player3.classList.add('selected')
-    }
-    player4.onclick = function(){
-        player1.classList.remove('selected')
-        player3.classList.remove('selected')
-        player2.classList.remove('selected')
-        player4.classList.add('selected')
+
+let playerElements = [player1, player2, player3, player4];
+
+function numberOfPlayers() {
+    for (let i = 0; i < playerElements.length; i++) {
+        playerElements[i].onclick = function () {
+            for (let j = 0; j < playerElements.length; j++) {
+                if (i === j) {
+                    playerElements[j].classList.add('selected');
+                } else {
+                    playerElements[j].classList.remove('selected');
+                }
+            }
+        }
     }
 }
+
 
 function gridSize(){
     grid4.onclick = function(){
@@ -166,11 +167,10 @@ function shuffleArray(array) {
     return array.slice().sort(() => Math.random() - 0.5);
 }
 
-
 function updateCardContent() {
     let cardBacks = document.querySelectorAll(".card-back");
     newArray.forEach((value, index) => {
-        // Update the content of each card back with the new array order
+
         if (arrayTheme === 'numbers') {
             cardBacks[index].textContent = value;
         } else if (arrayTheme === 'icons') {
@@ -179,11 +179,9 @@ function updateCardContent() {
     });
 }
 
-function singlePlayer(theme){
+function singlePlayer(){
 
     noOfPlayers = document.querySelector("#noOfPlayers");
-
-    isFirstClick = true;
   
     if(!time){
         time = document.createElement("div");
@@ -203,7 +201,6 @@ function singlePlayer(theme){
     displayMoves = document.querySelector("#moves");
   
     function startTimer() {
-        console.log('Timer started!');
     
         let minutes = 0;
         let seconds = 0;
@@ -225,72 +222,17 @@ function singlePlayer(theme){
   
     document.querySelectorAll(".flipper").forEach((flipper) => {
         flipper.addEventListener("click", function () {
-            console.log('isFirstClick:', isFirstClick);
 
             if (isFirstClick) {
                 startTimer();
                 isFirstClick = false;
             }
-    
-            if (
-            flippedCards.length < 2 &&
-            !flippedCards.includes(flipper) &&
-            !matchedCards.includes(flipper)
-            ) {
-                moves++;
-                displayMoves.textContent = moves;
-        
-                flipCard(flipper);
-                flippedCards.push(flipper);
-                
-    
-                if (flippedCards.length === 2) {
-                    let [card1, card2] = flippedCards;
-                    let card1Content;
-                    let card2Content;
-
-                    if(theme === 'numbers'){
-                        card1Content = card1.querySelector(".card-back").textContent;
-                        card2Content = card2.querySelector(".card-back").textContent;
-                    }
-                    else{
-                        card1Content = card1.querySelector(".card-back img").src;
-                        card2Content = card2.querySelector(".card-back img").src;
-                    }
-        
-                    if (card1Content === card2Content){
-                    matchedCards.push(...flippedCards);
-                    flippedCards = [];
-        
-                    card1.classList.add("match");
-                    card2.classList.add("match");
-                    card1.classList.add("highlight");
-                    card2.classList.add("highlight");
-        
-                    setTimeout(() => {
-                        card1.classList.remove("highlight");
-                        card2.classList.remove("highlight");
-                    }, 1000);
-                    }else{
-                    setTimeout(() => {
-                        flipCardsBack(flippedCards);
-                        flippedCards = [];
-                        lockBoard = false;
-                    }, 1700);
-                    }
-
-                    if(matchedCards.length === arr.length){
-                        stopTimer();
-                        winner();
-                    }
-                }
-            }
+            handleCardClick(flipper)
         });
     });
 }
 
-function multiplayer(num, theme){
-    let activePlayerIndex = 0;
+function multiplayer(num){
 
     for (let i = 0; i < num; i++) {
         let playerName = `Player ${i + 1}`;
@@ -320,89 +262,95 @@ function multiplayer(num, theme){
 
     }
 
-
     document.querySelectorAll(".flipper").forEach((flipper) => {
-
         flipper.addEventListener("click", function () {
-    
-            if (
-            flippedCards.length < 2 &&
-            !flippedCards.includes(flipper) &&
-            !matchedCards.includes(flipper)
-            ) {
-             
-                flipCard(flipper);
-                flippedCards.push(flipper);
-
-                if (flippedCards.length === 2) {
-                    let [card1, card2] = flippedCards;
-                    let card1Content;
-                    let card2Content;
-
-
-                    if(theme === 'numbers'){
-                        card1Content = card1.querySelector(".card-back").textContent;
-                        card2Content = card2.querySelector(".card-back").textContent;
-                    }
-                    else{
-                        card1Content = card1.querySelector(".card-back img").src;
-                        card2Content = card2.querySelector(".card-back img").src;
-                    }
-            
-
-                    if( card1Content === card2Content) {
-                        matchedCards.push(...flippedCards);
-                        flippedCards = [];
-            
-                        card1.classList.add("match");
-                        card2.classList.add("match");
-                        card1.classList.add("highlight");
-                        card2.classList.add("highlight");
-
-                        players[activePlayerIndex].score += 1;
-                        updateScoreUI(activePlayerIndex);
-
-
-                        setTimeout(() => {
-                            card1.classList.remove("highlight");
-                            card2.classList.remove("highlight");
-                        }, 1000);
-
-                    }else{
-                        setTimeout(() => {
-                            flipCardsBack(flippedCards);
-                            flippedCards = [];
-                            lockBoard = false;
-
-                            activePlayerIndex = (activePlayerIndex + 1) % num;
-
-                            let previous = document.querySelector('.current-player');
-                            previous.classList.remove('current-player');
-    
-                            let nextIndex = document.getElementById(`player${activePlayerIndex}`)
-                            nextIndex.classList.add('current-player');
-                        }, 1700); 
-                    }
-
-
-                    if(matchedCards.length === arr.length){
-                        findWinner();
-                    }
-                }
-
-                function findWinner(){
-                    let sorted = players.sort((a, b) => b.score - a.score);
-                    let highscore = sorted[0].score;
-
-                    let gameWinners = sorted.filter(players => players.score === highscore);
-
-                    winner(gameWinners, sorted);
-                }
-    
-            }
+            handleCardClick(flipper);
         });
-    });
-    
+    }); 
+}
+
+function handleCardClick(flipper) {
+    if (
+        flippedCards.length < 2 &&
+        !flippedCards.includes(flipper) &&
+        !matchedCards.includes(flipper)
+    ) {
+        playAudio(openSound);
+
+        flipCard(flipper);
+        flippedCards.push(flipper);
+
+        if (flippedCards.length === 2) {
+            let [card1, card2] = flippedCards;
+            let card1Content;
+            let card2Content;
+
+            if(num === 1){
+                moves++;
+                displayMoves.textContent = moves;   
+            }
+
+            if (arrayTheme === 'numbers') {
+                card1Content = card1.querySelector(".card-back").textContent;
+                card2Content = card2.querySelector(".card-back").textContent;
+            } else {
+                card1Content = card1.querySelector(".card-back img").src;
+                card2Content = card2.querySelector(".card-back img").src;
+            }
+
+            if (card1Content === card2Content) {
+                matchedCards.push(...flippedCards);
+                flippedCards = [];
+
+                card1.classList.add("match");
+                card2.classList.add("match");
+                card1.classList.add("highlight");
+                card2.classList.add("highlight");
+
+                if(num > 1) {
+                    players[playerIndex].score += 1;
+                    updateScoreUI(playerIndex);
+                }
+
+                playAudio(rightMatch);
+
+                setTimeout(() => {
+                    card1.classList.remove("highlight");
+                    card2.classList.remove("highlight");
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    flipCardsBack(flippedCards);
+                    flippedCards = [];
+                    lockBoard = false;
+
+                    if (num > 1) {
+                        playerIndex = (playerIndex + 1) % num;
+                        updateCurrentPlayer();
+                    }
+
+                    playAudio(closeSound);
+                }, 1700);
+            }
+
+            if (matchedCards.length === arr.length) {
+                if (num === 1) {
+                    stopTimer();
+                    winner();
+                } else {
+                    findWinner();
+                }
+            }
+        }
+    }
+}
+
+function updateCurrentPlayer() {
+    let previous = document.querySelector('.current-player');
+    previous.classList.remove('current-player');
+
+    let nextIndex = document.getElementById(`player${playerIndex}`)
+    nextIndex.classList.add('current-player');
 }
 
 function updateScoreUI(playerIndex) {
@@ -463,6 +411,15 @@ function getContent(){
     }  
 } 
 
+function findWinner(){
+    let sorted = players.sort((a, b) => b.score - a.score);
+    let highscore = sorted[0].score;
+
+    let gameWinners = sorted.filter(players => players.score === highscore);
+
+    winner(gameWinners, sorted);
+}
+
 function winner(winners, playersScore){
     
     localStorage.clear();
@@ -491,7 +448,7 @@ function winner(winners, playersScore){
     result.setAttribute('class','result')
     banner.appendChild(result)
 
-
+    gameOver.play();
     document.body.classList.add('popup-open');
 
     if(num === 1){
@@ -619,12 +576,8 @@ function Circle(theme,size){
 
     let array =[...Array]
     newArray = Array.concat(array)
-    function shuffle(newArray){
-      return newArray.sort(()=>Math.random() - 0.5)
-    }
-    newArray = shuffle(newArray)
 
-    return newArray;
+    return shuffleArray(newArray);
 }
 
 function toggleMenu() {
